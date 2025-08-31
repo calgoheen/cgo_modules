@@ -115,7 +115,7 @@ void Flanger::process (float* const* buffer, int startIndex, int numSamples)
         const float feedback = feedbackSmoother.getNextValue() * feedbackSign;
         const float depth = depthSmoother.getNextValue();
         const float relativePhaseOffset = offsetSmoother.getNextValue();
-        const float outputGain = outputSmoother.getNextValue();
+        const float outputGain = juce::Decibels::decibelsToGain (outputSmoother.getNextValue());
         const float mix = mixSmoother.getNextValue();
 
         const auto [dryGain, wetGain] = AudioUtils::constantPowerMix (mix);
@@ -137,7 +137,7 @@ void Flanger::process (float* const* buffer, int startIndex, int numSamples)
             modulatedDelay->pushSample (j, modulatedDelayIn);
 
             const float wet = 0.71f * (filterOut + modulatedDelayOut);
-            const float y = dry * dryGain + wet * wetGain;
+            const float y = dry * dryGain + wet * wetGain * outputGain;
 
             buffer[j][i] = y;
         }
