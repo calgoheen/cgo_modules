@@ -149,7 +149,7 @@ ParamUtils::ParamPtr ParamUtils::createChoiceParameter (const juce::String& id,
 
     return createRangedParameter (id,
                                   name, 
-                                  "Hz", 
+                                  "", 
                                   { 0.0f, float (choices.size() - 1), 1.0f }, 
                                   static_cast<float> (defaultChoice), 
                                   std::move (stringFromValue), 
