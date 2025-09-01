@@ -111,12 +111,12 @@ Chorus::StereoSample Chorus::processChorus (StereoSample dry, float amount, floa
     static constexpr int numTaps = 2;
     static constexpr auto phases = std::array { std::array { 0.0f, 0.75f }, std::array { 0.75f, 0.0f } };
 
+    const float maxDelaySamples = amount * maxDelaySeconds * getSampleRate();
+
     StereoSample wet = { 0.0f, 0.0f };
 
     for (int j = 0; j < 2; j++)
     {
-        const float maxDelaySamples = amount * maxDelaySeconds * getSampleRate();
-
         for (int k = 0; k < numTaps; k++)
         {
             const float minDelaySamples = k == 0 ? 0.0f : maxDelaySamples / 2.0f;
@@ -143,13 +143,13 @@ Chorus::StereoSample Chorus::processEnsemble (StereoSample dry, float amount, fl
     static constexpr int numTaps = 2;
     static constexpr auto phases = std::array { std::array { 0.0f, 1.0f / 3.0f }, std::array { 2.0f / 3.0f, 0.0f } };
 
+    const float minDelaySamples = (delayCenterSeconds - delayRangeSeconds * amount) * getSampleRate();
+    const float maxDelaySamples = (delayCenterSeconds + delayRangeSeconds * amount) * getSampleRate();
+
     StereoSample wet = { 0.0f, 0.0f };
 
     for (int j = 0; j < 2; j++)
     {
-        const float minDelaySamples = (delayCenterSeconds - delayRangeSeconds * amount) * getSampleRate();
-        const float maxDelaySamples = (delayCenterSeconds + delayRangeSeconds * amount) * getSampleRate();
-
         for (int k = 0; k < numTaps; k++)
         {
             const float modVal = LfoTable::getSpline<numSplinePoints> (LfoTable::sine, phasor.getFloat (phases[j][k]));
