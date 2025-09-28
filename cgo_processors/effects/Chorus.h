@@ -17,11 +17,12 @@ public:
             feedback = ParamUtils::createPercentParameter ("feedback", "Feedback", 0.0f);
             flipFeedback = ParamUtils::createBoolParameter ("flip_fb", "Flip", false);
             width = ParamUtils::createRangedParameter ("width", "Width", "%", { 0.0f, 2.0f }, 1.0f, std::move (widthSfv), std::move (widthVfs));
+            warmth = ParamUtils::createPercentParameter ("warmth", "Warmth", 0.0f);
             output = ParamUtils::createGainParameter ("output", "Output", -30.0f, 6.0f, 0.0f);
             mix = ParamUtils::createPercentParameter ("mix", "Mix", 0.5f);
         }
 
-        ParamUtils::ParamPtr type, rate, amount, feedback, flipFeedback, width, output, mix;
+        ParamUtils::ParamPtr type, rate, amount, feedback, flipFeedback, width, warmth, output, mix;
     };
 
     Chorus (Params& params);
@@ -52,6 +53,7 @@ private:
     juce::SmoothedValue<float> amountSmoother;
     juce::SmoothedValue<float> feedbackSmoother;
     juce::SmoothedValue<float> widthSmoother;
+    juce::SmoothedValue<float> cutoffSmoother;
     juce::SmoothedValue<float> outputSmoother;
     juce::SmoothedValue<float> mixSmoother;
 
@@ -61,6 +63,9 @@ private:
 
     using DelayLine = chowdsp::DelayLine<float, chowdsp::DelayLineInterpolationTypes::Lagrange3rd>;
     std::array<std::optional<DelayLine>, 2> modulatedDelays;
+
+    using LowpassFilter = chowdsp::FirstOrderLPF<float>;
+    LowpassFilter lowpass;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Chorus)
 };

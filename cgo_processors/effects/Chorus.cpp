@@ -36,6 +36,12 @@ Chorus::Chorus (Params& params)
                           {
                               widthSmoother.setTargetValue (val);
                           },
+                          *parameters.warmth,
+                          [this] (float val)
+                          {
+                              const float cutoff = juce::mapToLog10 (val, 22e3f, 1000.0f);
+                              cutoffSmoother.setTargetValue (cutoff);
+                          },
                           *parameters.output,
                           [this] (float val)
                           {
@@ -62,8 +68,13 @@ void Chorus::reset()
     amountSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     feedbackSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     widthSmoother.reset (getSampleRate(), smoothingTimeSeconds);
+    cutoffSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     outputSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     mixSmoother.reset (getSampleRate(), smoothingTimeSeconds);
+
+    lowpass.prepare (getNumChannels());
+    lowpass.calcCoefs (cutoffSmoother.getCurrentValue(), getSampleRate());
+    lowpass.reset();
 
     phasor.setFrequency (rateSmoother.getCurrentValue(), getSampleRate());
     phasor.setPhase (0.0);
@@ -79,6 +90,9 @@ void Chorus::process (float* const* buffer, int startIndex, int numSamples)
         if (rateSmoother.isSmoothing())
             phasor.setFrequency (rateSmoother.getNextValue(), getSampleRate());
 
+        if (cutoffSmoother.isSmoothing())
+            lowpass.calcCoefs (cutoffSmoother.getNextValue(), getSampleRate());
+
         const float amount = Curve::exponential (amountSmoother.getNextValue(), amountCurve);
         const float feedback = feedbackSmoother.getNextValue() * feedbackSign;
         const float width = widthSmoother.getNextValue();
@@ -93,7 +107,10 @@ void Chorus::process (float* const* buffer, int startIndex, int numSamples)
         const auto [dryGain, wetGain] = AudioUtils::constantPowerMix (mix);
 
         for (int j = 0; j < 2; j++)
-            buffer[j][i] = dryGain * dry[j] + wetGain * outputGain * wet[j];
+        {
+            const float lpfOut = lowpass.processSample (wet[j], j);
+            buffer[j][i] = dryGain * dry[j] + wetGain * outputGain * lpfOut;
+        }
 
         phasor.inc();
     }
