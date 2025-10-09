@@ -5,3 +5,4 @@
 
 #include "effects/Flanger.cpp"
 #include "effects/Chorus.cpp"
+#include "effects/Phaser.cpp"

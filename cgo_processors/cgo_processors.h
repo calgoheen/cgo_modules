@@ -27,3 +27,4 @@
 
 #include "effects/Flanger.h"
 #include "effects/Chorus.h"
+#include "effects/Phaser.h"
