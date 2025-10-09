@@ -167,7 +167,7 @@ ParamUtils::ParamPtr ParamUtils::createSyncedRateParameter (const juce::String& 
                                                             const juce::String& name)
 {
     static const juce::StringArray choices { "1/32", "1/24", "1/16", "1/12", "1/8", "1/6", "3/16", "1/4", "5/16", "1/3", "3/8", "1/2", "3/4", "1", "2", "3", "4", "6", "8" };
-    return createChoiceParameter (id, name, choices, 13);
+    return createChoiceParameter (id, name, choices, 14);
 }
 
 double ParamUtils::syncedRateIndexToBeats (int index)

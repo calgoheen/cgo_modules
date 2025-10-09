@@ -57,10 +57,15 @@ Flanger::Flanger (Params& params)
                           {
                               offsetSmoother.setTargetValue (val);
                           },
-                          *parameters.cutoff,
+                          *parameters.safeBass,
                           [this] (float val)
                           {
-                              cutoffSmoother.setTargetValue (val);
+                              highpassSmoother.setTargetValue (val);
+                          },
+                          *parameters.warmth,
+                          [this] (float val)
+                          {
+                              lowpassSmoother.setTargetValue (juce::mapToLog10 (val, 22e3f, 1000.0f));
                           },
                           *parameters.output,
                           [this] (float val)
@@ -86,13 +91,19 @@ void Flanger::reset()
     rateSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     depthSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     offsetSmoother.reset (getSampleRate(), smoothingTimeSeconds);
-    cutoffSmoother.reset (getSampleRate(), smoothingTimeSeconds);
+    highpassSmoother.reset (getSampleRate(), smoothingTimeSeconds);
+    lowpassSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     outputSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     mixSmoother.reset (getSampleRate(), smoothingTimeSeconds);
 
     highpass.prepare (getNumChannels());
-    highpass.calcCoefs (cutoffSmoother.getCurrentValue(), 0.71f, getSampleRate());
+    highpass.calcCoefs (highpassSmoother.getCurrentValue(), 0.71f, getSampleRate());
     highpass.reset();
+
+    lowpass.prepare (getNumChannels());
+    lowpass.calcCoefs (lowpassSmoother.getCurrentValue(), getSampleRate());
+    lowpass.reset();
+
     phasor.setFrequency (rateSmoother.getCurrentValue(), getSampleRate());
     phasor.setPhase (0.0);
 }
@@ -108,8 +119,11 @@ void Flanger::process (float* const* buffer, int startIndex, int numSamples)
         if (rateSmoother.isSmoothing())
             phasor.setFrequency (rateSmoother.getNextValue(), getSampleRate());
 
-        if (cutoffSmoother.isSmoothing())
-            highpass.calcCoefs (cutoffSmoother.getNextValue(), 0.71f, getSampleRate());
+        if (highpassSmoother.isSmoothing())
+            highpass.calcCoefs (highpassSmoother.getNextValue(), 0.71f, getSampleRate());
+
+        if (lowpassSmoother.isSmoothing())
+            lowpass.calcCoefs (lowpassSmoother.getNextValue(), getSampleRate());
 
         const float maxDelaySamples = delaySmoother.getNextValue() * getSampleRate();
         const float feedback = feedbackSmoother.getNextValue() * feedbackSign;
@@ -131,12 +145,12 @@ void Flanger::process (float* const* buffer, int startIndex, int numSamples)
                                                 minDelaySamples < 2.0f ? 2.0f : minDelaySamples);
 
             const float dry = buffer[j][i];
-            const float filterOut = highpass.processSample (dry, j);
             const float modulatedDelayOut = modulatedDelay->popSample (j, nextDelay, true);
-            const float modulatedDelayIn = filterOut + feedback * modulatedDelayOut;
+            const float modulatedDelayIn = dry + feedback * modulatedDelayOut;
             modulatedDelay->pushSample (j, modulatedDelayIn);
 
-            const float wet = 0.71f * (filterOut + modulatedDelayOut);
+            const float hpfOut = highpass.processSample (modulatedDelayOut, j);
+            const float wet = 0.5f * lowpass.processSample (dry + hpfOut, j);
             const float y = dry * dryGain + wet * wetGain * outputGain;
 
             buffer[j][i] = y;
