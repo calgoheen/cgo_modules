@@ -14,16 +14,16 @@ public:
             feedback = ParamUtils::createPercentParameter ("feedback", "Feedback", 0.0f);
             flipFeedback = ParamUtils::createBoolParameter ("flip_fb", "Flip", false);
             shape = ParamUtils::createChoiceParameter ("shape", "Shape", { "Triangle", "Sine", "Ramp Up", "Ramp Down" }, 0);
-            sync = ParamUtils::createBoolParameter ("sync", "Sync", false);
+            sync = ParamUtils::createBoolParameter ("sync", "Sync", true);
             rateFree = ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.0f, 10.0f, 1.0f, 1.0f);
             rateSync = ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync");
             amount = ParamUtils::createPercentParameter ("amount", "Amount", 1.0f);
             blend = ParamUtils::createPercentParameter ("blend", "Blend", 0.0f);
             offset = ParamUtils::createPercentParameter ("offset", "Offset", 0.5f);
-            safeBass = ParamUtils::createFreqParameter ("safe_bass", "Safe Bass", 10.0f, 3000.0f, 500.0f, 10.0f);
+            safeBass = ParamUtils::createFreqParameter ("safe_bass", "Safe Bass", 10.0f, 3000.0f, 500.0f, 100.0f);
             warmth = ParamUtils::createPercentParameter ("warmth", "Warmth", 0.0f);
             output = ParamUtils::createGainParameter ("output", "Output", -30.0f, 6.0f, 0.0f);
-            mix = ParamUtils::createPercentParameter ("mix", "Mix", 0.5f);
+            mix = ParamUtils::createPercentParameter ("mix", "Mix", 1.0f);
         }
 
         ParamUtils::ParamPtr notches, center, spread, feedback, flipFeedback, shape, sync, rateFree, rateSync, amount, blend, offset, safeBass, warmth, output, mix;
