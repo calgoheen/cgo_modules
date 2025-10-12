@@ -93,7 +93,7 @@ void Chorus::process (float* const* buffer, int startIndex, int numSamples)
         if (cutoffSmoother.isSmoothing())
             lowpass.calcCoefs (cutoffSmoother.getNextValue(), getSampleRate());
 
-        const float amount = Curve::exponential (amountSmoother.getNextValue(), amountCurve);
+        const float amount = Curve::exponential (juce::jlimit (0.0f, 1.0f, amountSmoother.getNextValue()), amountCurve);
         const float feedback = feedbackSmoother.getNextValue() * feedbackSign;
         const float width = widthSmoother.getNextValue();
         const float outputGain = juce::Decibels::decibelsToGain (outputSmoother.getNextValue());

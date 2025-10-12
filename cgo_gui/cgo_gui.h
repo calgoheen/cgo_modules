@@ -20,3 +20,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include "components/Plot.h"
+#include "components/FilmStripSlider.h"
+#include "components/ImageRotarySlider.h"
+#include "components/ImageThumbSlider.h"
+#include "components/ImageToggleButton.h"

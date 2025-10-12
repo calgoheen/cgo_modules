@@ -20,6 +20,8 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_audio_formats/juce_audio_formats.h>
 
+#include "components/ResizableEditor.h"
+
 #include "utilities/Iterators.h"
 #include "utilities/OptionalPointer.h"
 #include "utilities/SoundFileUtils.h"
