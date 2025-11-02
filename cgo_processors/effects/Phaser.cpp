@@ -133,6 +133,8 @@ void Phaser::reset()
     prevFilterOut.resize (getNumChannels());
     std::fill (prevFilterOut.begin(), prevFilterOut.end(), 0.0f);
 
+    centerSmoother.reset (getSampleRate(), smoothingTimeSeconds);
+    spreadSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     feedbackSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     rateSmoother.reset (getSampleRate(), smoothingTimeSeconds);
     amountSmoother.reset (getSampleRate(), smoothingTimeSeconds);
