@@ -35,7 +35,12 @@ private:
         ensemble
     };
 
+    static constexpr float delayLengthSeconds = 17e-3f;
+    static constexpr int numSplinePoints = 64;
+
     using StereoSample = std::array<float, 2>;
+    using DelayLine = chowdsp::DelayLine<float, chowdsp::DelayLineInterpolationTypes::Lagrange3rd>;
+    using LowpassFilter = chowdsp::FirstOrderLPF<float>;
 
     void reset() override;
     void process (float* const* buffer, int startIndex, int numSamples) override;
@@ -43,9 +48,6 @@ private:
 
     StereoSample processChorus (StereoSample drySample, float amount, float feedback);
     StereoSample processEnsemble (StereoSample drySample, float amount, float feedback);
-
-    static constexpr float delayLengthSeconds = 17e-3f;
-    static constexpr int numSplinePoints = 64;
 
     Params& parameters;
 
@@ -61,10 +63,7 @@ private:
     float feedbackSign;
     Algorithm algorithm;
 
-    using DelayLine = chowdsp::DelayLine<float, chowdsp::DelayLineInterpolationTypes::Lagrange3rd>;
     std::array<std::optional<DelayLine>, 2> modulatedDelays;
-
-    using LowpassFilter = chowdsp::FirstOrderLPF<float>;
     LowpassFilter lowpass;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Chorus)

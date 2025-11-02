@@ -30,15 +30,19 @@ public:
     ~Flanger() override = default;
 
 private:
+    static constexpr double minDelaySeconds { 0.1e-3 };
+    static constexpr double maxDelaySeconds { 20e-3 };
+    static constexpr int numSplinePoints = 64;
+
+    using DelayLine = chowdsp::DelayLine<float, chowdsp::DelayLineInterpolationTypes::Lagrange3rd>;
+    using HighpassFilter = chowdsp::SecondOrderHPF<float, chowdsp::CoefficientCalculators::CoefficientCalculationMode::Decramped>;
+    using LowpassFilter = chowdsp::FirstOrderLPF<float>;
+
     void reset() override;
     void process (float* const* buffer, int startIndex, int numSamples) override;
     void playbackStateChanged() override;
     void tempoChanged() override;
     void updateRateSync();
-
-    static constexpr double minDelaySeconds { 0.1e-3 };
-    static constexpr double maxDelaySeconds { 20e-3 };
-    static constexpr int numSplinePoints = 64;
 
     Params& parameters;
 
@@ -57,13 +61,8 @@ private:
     float feedbackSign;
     bool rateSyncActive;
 
-    using DelayLine = chowdsp::DelayLine<float, chowdsp::DelayLineInterpolationTypes::Lagrange3rd>;
     std::optional<DelayLine> modulatedDelay;
-
-    using HighpassFilter = chowdsp::SecondOrderHPF<float, chowdsp::CoefficientCalculators::CoefficientCalculationMode::Decramped>;
     HighpassFilter highpass;
-
-    using LowpassFilter = chowdsp::FirstOrderLPF<float>;
     LowpassFilter lowpass;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Flanger)

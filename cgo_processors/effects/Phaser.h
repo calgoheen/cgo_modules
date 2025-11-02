@@ -33,15 +33,19 @@ public:
     ~Phaser() override = default;
 
 private:
+    static constexpr int maxNotches = 42;
+    static constexpr int maxNumChannels = 2;
+    static constexpr int numSplinePoints = 64;
+
+    using HighpassFilter = chowdsp::SecondOrderHPF<float, chowdsp::CoefficientCalculators::CoefficientCalculationMode::Decramped>;
+    using LowpassFilter = chowdsp::FirstOrderLPF<float>;
+    using AllpassFilter = std::array<chowdsp::SVFAllpass<float>, maxNumChannels>;
+
     void reset() override;
     void process (float* const* buffer, int startIndex, int numSamples) override;
     void playbackStateChanged() override;
     void tempoChanged() override;
     void updateRateSync();
-
-    static constexpr int maxNotches = 42;
-    static constexpr int maxNumChannels = 2;
-    static constexpr int numSplinePoints = 64;
 
     Params& parameters;
 
@@ -64,14 +68,8 @@ private:
     std::vector<float> prevFilterOut;
 
     cgo::Phasor phasor;
-
-    using HighpassFilter = chowdsp::SecondOrderHPF<float, chowdsp::CoefficientCalculators::CoefficientCalculationMode::Decramped>;
     HighpassFilter highpass;
-
-    using LowpassFilter = chowdsp::FirstOrderLPF<float>;
     LowpassFilter lowpass;
-
-    using AllpassFilter = std::array<chowdsp::SVFAllpass<float>, maxNumChannels>;
     AllpassFilter allpassFilters;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Phaser)
