@@ -52,6 +52,8 @@ struct ParamUtils
     static double syncedRateIndexToBeats (int index);
 
     static juce::NormalisableRange<float> getRangeWithCenter (float min, float max, float center);
+
+    static float getScaledValue (ParamPtr& param);
 };
 
 } // namespace cgo

@@ -183,4 +183,9 @@ juce::NormalisableRange<float> ParamUtils::getRangeWithCenter (float min, float 
     return range;
 }
 
+float ParamUtils::getScaledValue (ParamPtr& param)
+{
+    return param->convertFrom0to1 (param->getValue());
+}
+
 } // namespace cgo

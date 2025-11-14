@@ -25,6 +25,7 @@
 #include "base/ProcessParameterUpdater.h"
 #include "base/Processor.h"
 
+#include "effects/TapeStop.h"
 #include "effects/Flanger.h"
 #include "effects/Chorus.h"
 #include "effects/Phaser.h"
