@@ -1,6 +1,26 @@
 namespace cgo
 {
 
+#define TAPESTOP_PARAMETERS(X) \
+    X (mode) \
+    X (autoBypass) \
+    X (sync) \
+    X (slowdownLength) \
+    X (slowdownLengthSync) \
+    X (slowdownCurve) \
+    X (slowdownStart) \
+    X (slowdownEnd) \
+    X (speedupLength) \
+    X (speedupLengthSync) \
+    X (speedupCurve) \
+    X (speedupStart) \
+    X (speedupEnd) \
+    X (fadeLength) \
+    X (crossfadeLength) \
+    X (filterType) \
+    X (filterCutoff) \
+    X (filterResonance)
+
 class TapeStop : public Processor
 {
 public:
@@ -21,31 +41,16 @@ public:
             speedupCurve = ParamUtils::createRangedParameter ("spd_cur", "Speedup Curve", "", { -1.0f, 1.0f }, 0.0f);
             speedupStart = ParamUtils::createPercentParameter ("spd_strt", "Speedup Start", 0.0f);
             speedupEnd = ParamUtils::createPercentParameter ("spd_end", "Speedup End", 1.0f);
-            fadeLength = ParamUtils::createPercentParameter ("fade_len", "Fade", 0.1f);
-            crossfadeLength = ParamUtils::createTimeParameter ("xfade_len", "Crossfade", 0.005f, 0.5f, 0.1f, 0.01f);
-            filterType = ParamUtils::createChoiceParameter ("flt_typ", "Filter Type", { "LP", "HP", "BP" }, 1);
-            filterCutoff = ParamUtils::createFreqParameter ("flt_cut", "Filter Cutoff", 10.0f, 22e3f, 2e3f, 100.0f);
+            fadeLength = ParamUtils::createTimeParameter ("fade_len", "Fade", 0.005f, 0.5f, 0.1f, 0.02f);
+            crossfadeLength = ParamUtils::createTimeParameter ("xfade_len", "Crossfade", 0.005f, 0.5f, 0.1f, 0.02f);
+            filterType = ParamUtils::createChoiceParameter ("flt_typ", "Filter Type", { "LP", "HP", "BP" }, 0);
+            filterCutoff = ParamUtils::createFreqParameter ("flt_cut", "Filter Cutoff", 10.0f, 22e3f, 2e3f, 22e3f);
             filterResonance = ParamUtils::createRangedParameter ("flt_res", "Filter Resonance", "", ParamUtils::getRangeWithCenter (0.1f, 5.0f, 1.0f), 0.71f);
         }
 
-        ParamUtils::ParamPtr mode,
-                             autoBypass, 
-                             sync, 
-                             slowdownLength, 
-                             slowdownLengthSync, 
-                             slowdownCurve, 
-                             slowdownStart, 
-                             slowdownEnd, 
-                             speedupLength, 
-                             speedupLengthSync, 
-                             speedupCurve, 
-                             speedupStart, 
-                             speedupEnd, 
-                             fadeLength, 
-                             crossfadeLength,
-                             filterType,
-                             filterCutoff,
-                             filterResonance;
+        #define X(name) ParamUtils::ParamPtr name;
+        TAPESTOP_PARAMETERS (X)
+        #undef X
     };
 
     TapeStop (Params& parameters);
@@ -101,7 +106,7 @@ private:
     double slowdownCurve, speedupCurve;
     double slowdownStart, speedupStart;
     double slowdownEnd, speedupEnd;
-    float fadeLengthProportion;
+    int fadeLengthSamples;
     int crossfadeLengthSamples;
 
     Settings currentSettings, prevSettings;

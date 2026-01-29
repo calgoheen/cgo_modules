@@ -41,11 +41,11 @@ TapeStop::TapeStop (Params& params)
                           },
                           *parameters.slowdownStart, [this] (float val)
                           {
-                              slowdownStart = val;
+                              slowdownStart = juce::jmin (val, ParamUtils::getScaledValue (parameters.slowdownEnd) - 0.1f);
                           },
                           *parameters.slowdownEnd, [this] (float val)
                           {
-                              slowdownEnd = val;
+                              slowdownEnd = juce::jmax (val, ParamUtils::getScaledValue (parameters.slowdownStart) + 0.1f);
                           },
                           *parameters.speedupLength, [this] (float val)
                           {
@@ -63,15 +63,15 @@ TapeStop::TapeStop (Params& params)
                           },
                           *parameters.speedupStart, [this] (float val)
                           {
-                              speedupStart = val;
+                              speedupStart = juce::jmin (val, ParamUtils::getScaledValue (parameters.speedupEnd) - 0.1f);
                           },
                           *parameters.speedupEnd, [this] (float val)
                           {
-                              speedupEnd = val;
+                              speedupEnd = juce::jmax (val, ParamUtils::getScaledValue (parameters.speedupStart) + 0.1f);
                           },
                           *parameters.fadeLength, [this] (float val)
                           {
-                              fadeLengthProportion = val;
+                              fadeLengthSamples = juce::roundToInt (val * getSampleRate());
                           },
                           *parameters.crossfadeLength, [this] (float val)
                           {
@@ -181,8 +181,7 @@ void TapeStop::processSample (float* const* buffer, int sampleIndex, Settings& s
         if (settings.counter < settings.length)
         {
             const double position = static_cast<double> (settings.counter + 1) / static_cast<double> (settings.length);
-            const double curved = Curve::exponential (position, settings.curve);
-            const double mapped = juce::jmap (curved, settings.start, settings.end);
+            const double mapped = Curve::exponential (juce::jmap (position, settings.start, settings.end), settings.curve);
 
             settings.delay += settings.mode == Mode::stop ? mapped : 1.0 - mapped;
         }
@@ -237,7 +236,7 @@ void TapeStop::updateMode (Mode nextMode)
         currentSettings.end = speedupEnd;
     }
 
-    currentSettings.fadeLength = juce::jmax (static_cast<int> (fadeLengthProportion * currentSettings.length), 1);
+    currentSettings.fadeLength = juce::jmin (currentSettings.length, fadeLengthSamples);
     currentSettings.crossfadeLength = juce::jmin (currentSettings.length, crossfadeLengthSamples);
 
     nextFilterToUse->reset();
