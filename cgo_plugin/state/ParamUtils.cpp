@@ -11,9 +11,11 @@ ParamUtils::ParamPtr ParamUtils::createRangedParameter (const juce::String& id,
                                                         std::function<juce::String (float, int)> stringFromValue,
                                                         std::function<float (const juce::String&)> valueFromString)
 {
-    const auto attributes = juce::AudioParameterFloatAttributes().withStringFromValueFunction (std::move (stringFromValue)).withValueFromStringFunction (std::move (valueFromString)).withLabel (label);
+    const auto attributes = juce::AudioParameterFloatAttributes().withStringFromValueFunction (std::move (stringFromValue))
+                                                                 .withValueFromStringFunction (std::move (valueFromString))
+                                                                 .withLabel (label);
 
-    return std::unique_ptr<juce::RangedAudioParameter> (new juce::AudioParameterFloat (juce::ParameterID { id, 1 },
+    return std::unique_ptr<juce::RangedAudioParameter> (new juce::AudioParameterFloat ({ id, 1 },
                                                                                        name,
                                                                                        range,
                                                                                        defaultValue,
@@ -124,7 +126,7 @@ ParamUtils::ParamPtr ParamUtils::createTimeParameter (const juce::String& id,
 
     return createRangedParameter (id,
                                   name, 
-                                  "Hz", 
+                                  "", 
                                   getRangeWithCenter (minTimeSeconds, maxTimeSeconds, centerTimeSeconds), 
                                   defaultValue, 
                                   std::move (stringFromValue), 
@@ -136,24 +138,18 @@ ParamUtils::ParamPtr ParamUtils::createChoiceParameter (const juce::String& id,
                                                         const juce::StringArray& choices,
                                                         int defaultChoice)
 {
-    auto stringFromValue = [=] (float x, int)
-    {
-        return choices[int (x)];
-    };
-
     auto valueFromString = [=] (const juce::String& str)
     {
-        const int index = choices.indexOf (str, true);
-        return index >= 0 ? static_cast<float> (index) : 0.0f;
+        return choices.indexOf (str, true);
     };
 
-    return createRangedParameter (id,
-                                  name, 
-                                  "", 
-                                  { 0.0f, float (choices.size() - 1), 1.0f }, 
-                                  static_cast<float> (defaultChoice), 
-                                  std::move (stringFromValue), 
-                                  std::move (valueFromString));
+    const auto attributes = juce::AudioParameterChoiceAttributes().withValueFromStringFunction (std::move (valueFromString));
+
+    return std::unique_ptr<juce::RangedAudioParameter> (new juce::AudioParameterChoice ({ id, 1 }, 
+                                                                                        name, 
+                                                                                        choices, 
+                                                                                        defaultChoice, 
+                                                                                        attributes));
 }
 
 ParamUtils::ParamPtr ParamUtils::createBoolParameter (const juce::String& id,

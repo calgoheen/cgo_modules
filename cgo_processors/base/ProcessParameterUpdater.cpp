@@ -1,4 +1,4 @@
-#include <cgo_plugin/cgo_plugin.h>
+#include <cgo_processors/cgo_processors.h>
 
 namespace cgo
 {
