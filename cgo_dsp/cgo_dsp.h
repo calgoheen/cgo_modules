@@ -10,7 +10,7 @@
   license:            GPLv3
   minimumCppStandard: 17
 
-  dependencies:       juce_audio_processors, juce_audio_formats, juce_dsp
+  dependencies:       juce_audio_processors, juce_audio_formats, juce_dsp, chowdsp_dsp_utils
 
  END_JUCE_MODULE_DECLARATION
 *******************************************************************************/
@@ -20,6 +20,7 @@
 #include <juce_events/juce_events.h>
 #include <juce_audio_formats/juce_audio_formats.h>
 #include <juce_dsp/juce_dsp.h>
+#include <chowdsp_dsp_utils/chowdsp_dsp_utils.h>
 
 JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wextra-semi", "-Wsign-conversion", "-Wfloat-equal", "-Wgnu-anonymous-struct", "-Wnested-anon-types")
 #include "utilities/r8b/CDSPResampler.h"
@@ -35,3 +36,9 @@ JUCE_END_IGNORE_WARNINGS_GCC_LIKE
 #include "utilities/BufferUtils.h"
 #include "utilities/LfoTable.h"
 #include "utilities/AudioUtils.h"
+
+#include "reverb/ArrayMixers.h"
+#include "reverb/DiffusionStep.h"
+#include "reverb/Diffuser.h"
+#include "reverb/MultiTapDelay.h"
+#include "reverb/DiffusionReverb.h"
