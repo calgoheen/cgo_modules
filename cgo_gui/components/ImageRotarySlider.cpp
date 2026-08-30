@@ -4,7 +4,7 @@ namespace cgo
 {
 
 ImageRotarySlider::ImageRotarySlider (const juce::Image& img)
-    : imageWidth (img.getWidth()),
+  : imageWidth (img.getWidth()),
     imageHeight (img.getHeight() / 2),
     backgroundImage (img.getClippedImage ({ 0, 0, imageWidth, imageHeight })),
     markerImage (img.getClippedImage ({ 0, imageHeight, imageWidth, imageHeight }))
@@ -25,15 +25,12 @@ void ImageRotarySlider::paint (juce::Graphics& g)
         static constexpr float startAngle = juce::degreesToRadians (-130.0f);
         static constexpr float endAngle = juce::degreesToRadians (130.0f);
 
-        const float offsetAngle = valueToProportionOfLength (getValue()) * (endAngle - startAngle);
+        const float offsetAngle = (float) valueToProportionOfLength (getValue()) * (endAngle - startAngle);
         const juce::RectanglePlacement placement (juce::RectanglePlacement::stretchToFit);
 
-        const auto rotate = juce::AffineTransform::rotation (startAngle + offsetAngle, 
-                                                             imageWidth / 2.0f, 
-                                                             imageHeight / 2.0f);
+        const auto rotate = juce::AffineTransform::rotation (startAngle + offsetAngle, imageWidth / 2.0f, imageHeight / 2.0f);
 
-        const auto scale = placement.getTransformToFit (markerImage.getBounds().toFloat(), 
-                                                        getLocalBounds().toFloat());
+        const auto scale = placement.getTransformToFit (markerImage.getBounds().toFloat(), getLocalBounds().toFloat());
 
         return rotate.followedBy (scale);
     }();

@@ -1,23 +1,23 @@
 #include <cgo_dsp/cgo_dsp.h>
 
-namespace cgo
+namespace cgo::dsp::BufferUtils
 {
 
-void BufferUtils::applyFade (float* data, int startSample, int numSamples, bool fadeIn)
+void applyFade (float* data, int startSample, int numSamples, bool fadeIn)
 {
     if (fadeIn)
     {
         for (int i = 0; i < numSamples; i++)
-            data[startSample + i] *= std::sqrt (static_cast<float> (i) / numSamples);
+            data[startSample + i] *= std::sqrt ((float) i / numSamples);
     }
     else
     {
         for (int i = 0; i < numSamples; i++)
-            data[startSample + i] *= std::sqrt (static_cast<float> (numSamples - i) / numSamples);
+            data[startSample + i] *= std::sqrt ((float) (numSamples - i) / numSamples);
     }
 }
 
-void BufferUtils::normalize (juce::AudioBuffer<float>& buffer)
+void normalize (juce::AudioBuffer<float>& buffer)
 {
     auto ptr = buffer.getArrayOfWritePointers();
 
@@ -31,11 +31,11 @@ void BufferUtils::normalize (juce::AudioBuffer<float>& buffer)
             ptr[j][i] /= max;
 }
 
-juce::AudioBuffer<float> BufferUtils::resample (const juce::AudioBuffer<float>& sourceBuffer, double sourceFs, double destFs)
+juce::AudioBuffer<float> resample (const juce::AudioBuffer<float>& sourceBuffer, double sourceFs, double destFs)
 {
     int numChannels = sourceBuffer.getNumChannels();
     int sourceLength = sourceBuffer.getNumSamples();
-    int destLength = std::floor (sourceLength * destFs / sourceFs);
+    int destLength = (int) std::floor (sourceLength * destFs / sourceFs);
 
     juce::AudioBuffer<float> outBuffer;
     outBuffer.setSize (numChannels, destLength);
@@ -50,16 +50,15 @@ juce::AudioBuffer<float> BufferUtils::resample (const juce::AudioBuffer<float>& 
         sourceBufferDouble.clear();
 
         for (int i = 0; i < sourceLength; i++)
-            sourceBufferDouble.setSample (0, i, static_cast<double> (sourceBuffer.getSample (j, i)));
+            sourceBufferDouble.setSample (0, i, (double) sourceBuffer.getSample (j, i));
 
-        // Do resample and save to float output buffer
         double* outPtr;
         resampler->process (sourceBufferDouble.getWritePointer (0), numRequired, outPtr);
         for (int i = 0; i < destLength; i++)
-            outBuffer.setSample (j, i, static_cast<float> (outPtr[i]));
+            outBuffer.setSample (j, i, (float) outPtr[i]);
     }
 
-    return std::move (outBuffer);
+    return outBuffer;
 }
 
-} // namespace cgo
+} // namespace cgo::dsp::BufferUtils

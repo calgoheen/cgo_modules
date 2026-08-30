@@ -9,22 +9,16 @@ public:
     LookAndFeel (int radius) : thumbRadius (radius) {}
     ~LookAndFeel() override = default;
 
-    int getSliderThumbRadius (juce::Slider&) override
-    {
-        return thumbRadius;
-    }
+    int getSliderThumbRadius (juce::Slider&) override { return thumbRadius; }
 
 private:
     const int thumbRadius;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LookAndFeel)
+    JUCE_DECLARE_NON_COPYABLE (LookAndFeel)
 };
 
 ImageThumbSlider::ImageThumbSlider (const juce::Image& img, bool vertical)
-    : thumbWidth (img.getWidth()), 
-    thumbHeight (img.getHeight()), 
-    thumb (img),
-    isVertical (vertical)
+  : thumbWidth (img.getWidth()), thumbHeight (img.getHeight()), thumb (img), isVertical (vertical)
 {
     setSliderStyle (isVertical ? juce::Slider::SliderStyle::LinearVertical : juce::Slider::SliderStyle::LinearHorizontal);
     setTextBoxStyle (juce::Slider::NoTextBox, true, 0, 0);
@@ -33,37 +27,28 @@ ImageThumbSlider::ImageThumbSlider (const juce::Image& img, bool vertical)
     setLookAndFeel (lookAndFeel.get());
 }
 
-ImageThumbSlider::~ImageThumbSlider()
-{
-    setLookAndFeel (nullptr);
-}
+ImageThumbSlider::~ImageThumbSlider() { setLookAndFeel (nullptr); }
 
 void ImageThumbSlider::paint (juce::Graphics& g)
 {
-    const auto thumbBounds = [this] 
+    const auto thumbBounds = [this]
     {
-        const float relativePos = valueToProportionOfLength (getValue());
+        const float relativePos = (float) valueToProportionOfLength (getValue());
 
         if (isVertical)
         {
             const float yMax = getHeight() - thumbHeight;
 
-            return juce::Rectangle<float> (0.0f,
-                                           juce::jmap (relativePos, yMax, 0.0f),
-                                           thumbWidth,
-                                           thumbHeight);
+            return juce::Rectangle<float> (0.0f, juce::jmap (relativePos, yMax, 0.0f), thumbWidth, thumbHeight);
         }
         else
         {
             const float xMax = getWidth() - thumbWidth;
-            
-            return juce::Rectangle<float> (juce::jmap (relativePos, 0.0f, xMax),
-                                           0.0f,
-                                           thumbWidth,
-                                           thumbHeight);
+
+            return juce::Rectangle<float> (juce::jmap (relativePos, 0.0f, xMax), 0.0f, thumbWidth, thumbHeight);
         }
     }();
-    
+
     g.drawImage (thumb, thumbBounds);
 }
 

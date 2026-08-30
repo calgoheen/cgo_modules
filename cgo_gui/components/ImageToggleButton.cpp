@@ -3,8 +3,8 @@
 namespace cgo
 {
 
-ImageToggleButton::ImageToggleButton (const juce::Image& img) 
-    : Button (""),
+ImageToggleButton::ImageToggleButton (const juce::Image& img)
+  : Button (""),
     imageWidth (img.getWidth()),
     imageHeight (img.getHeight() / 2),
     offImage (img.getClippedImage ({ 0, 0, imageWidth, imageHeight })),
@@ -16,9 +16,6 @@ ImageToggleButton::ImageToggleButton (const juce::Image& img)
     setClickingTogglesState (true);
 }
 
-void ImageToggleButton::paintButton (juce::Graphics& g, bool, bool)
-{
-    g.drawImage (getToggleState() ? onImage : offImage, getLocalBounds().toFloat());
-}
+void ImageToggleButton::paintButton (juce::Graphics& g, bool, bool) { g.drawImage (getToggleState() ? onImage : offImage, getLocalBounds().toFloat()); }
 
 } // namespace cgo

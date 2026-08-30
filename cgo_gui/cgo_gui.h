@@ -8,19 +8,20 @@
   description:        What you need, when you need it.
   website:            https://www.calgoheen.com
   license:            GPLv3
-  minimumCppStandard: 17
+  minimumCppStandard: 20
 
-  dependencies:       juce_gui_basics
+  dependencies:       cgo_core, juce_gui_basics
 
  END_JUCE_MODULE_DECLARATION
 *******************************************************************************/
 
 #pragma once
 
+#include <cgo_core/cgo_core.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 
-#include "components/Plot.h"
 #include "components/FilmStripSlider.h"
 #include "components/ImageRotarySlider.h"
 #include "components/ImageThumbSlider.h"
 #include "components/ImageToggleButton.h"
+#include "components/ModKnob.h"

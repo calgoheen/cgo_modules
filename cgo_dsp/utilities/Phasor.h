@@ -1,4 +1,4 @@
-namespace cgo
+namespace cgo::dsp
 {
 
 class Phasor
@@ -6,16 +6,10 @@ class Phasor
 public:
     Phasor() = default;
 
-    void inc() 
-    { 
-        phase = std::fmod (phase + increment, 1.0); 
-    }
+    void inc() { phase = std::fmod (phase + increment, 1.0); }
 
-    double get() const 
-    { 
-        return phase;
-    }
-    
+    double get() const { return phase; }
+
     double get (double offset) const
     {
         jassert (offset >= 0.0);
@@ -30,16 +24,13 @@ public:
         return out;
     }
 
-    float getFloat() const 
-    { 
-        const float result = static_cast<float> (phase);
+    float getFloat() const
+    {
+        const float result = (float) phase;
         return result == 1.0f ? 0.0f : result;
     }
-    
-    float getFloat (float offset) const
-    {
-        return std::fmod (static_cast<float> (phase) + offset, 1.0f);
-    }
+
+    float getFloat (float offset) const { return std::fmod ((float) phase + offset, 1.0f); }
 
     float getFloatAndInc()
     {
@@ -53,8 +44,11 @@ public:
         jassert (freq >= 0.0);
         jassert (sampleRate >= 0.0);
 
+        frequency = freq;
         increment = freq / sampleRate;
     }
+
+    double getFrequency() const { return frequency; }
 
     void setPhase (double p)
     {
@@ -66,8 +60,7 @@ public:
 private:
     double phase { 0.0 };
     double increment { 0.0 };
-
-    JUCE_DECLARE_NON_COPYABLE (Phasor)
+    double frequency { 0.0 };
 };
 
-} // namespace cgo
+} // namespace cgo::dsp

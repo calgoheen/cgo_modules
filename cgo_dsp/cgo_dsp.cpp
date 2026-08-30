@@ -1,5 +1,5 @@
 #include "cgo_dsp.h"
 
-#include "utilities/r8b/r8bbase.cpp"
+#include "third_party/r8b/r8bbase.cpp"
 
-#include "utilities/BufferUtils.cpp"
+#include <cgo_dsp_units.inc>

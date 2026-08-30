@@ -16,7 +16,7 @@ private:
     const juce::Image backgroundImage;
     const juce::Image markerImage;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImageRotarySlider)
+    JUCE_DECLARE_NON_COPYABLE (ImageRotarySlider)
 };
 
 } // namespace cgo

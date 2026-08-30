@@ -1,4 +1,4 @@
-namespace cgo
+namespace cgo::dsp
 {
 
 class Fifo
@@ -49,7 +49,7 @@ private:
     juce::OwnedArray<juce::SingleThreadedAbstractFifo> abstractFifos;
     juce::AudioBuffer<float> buffer;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Fifo)
+    JUCE_DECLARE_NON_COPYABLE (Fifo)
 };
 
-} // namespace cgo
+} // namespace cgo::dsp

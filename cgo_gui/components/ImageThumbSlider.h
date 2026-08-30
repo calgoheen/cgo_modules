@@ -19,7 +19,7 @@ private:
     class LookAndFeel;
     std::unique_ptr<LookAndFeel> lookAndFeel;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImageThumbSlider)
+    JUCE_DECLARE_NON_COPYABLE (ImageThumbSlider)
 };
 
 } // namespace cgo

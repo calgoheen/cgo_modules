@@ -8,24 +8,20 @@
   description:        What you need, when you need it.
   website:            https://www.calgoheen.com
   license:            GPLv3
-  minimumCppStandard: 17
+  minimumCppStandard: 20
 
-  dependencies:       juce_audio_processors, juce_audio_formats
+  dependencies:       cgo_core, juce_audio_processors, juce_audio_formats
 
  END_JUCE_MODULE_DECLARATION
 *******************************************************************************/
 
 #pragma once
 
+#include <cgo_core/cgo_core.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_audio_formats/juce_audio_formats.h>
 
 #include "components/ResizableEditor.h"
 
-#include "utilities/Iterators.h"
-#include "utilities/OptionalPointer.h"
 #include "utilities/SoundFileUtils.h"
-
-#include "state/ParameterListener.h"
-#include "state/ParamUtils.h"
-#include "state/ParamHolder.h"
+#include "utilities/ParamUtils.h"

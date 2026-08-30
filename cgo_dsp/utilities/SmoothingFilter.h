@@ -1,4 +1,4 @@
-namespace cgo
+namespace cgo::dsp
 {
 
 template <typename T>
@@ -13,10 +13,7 @@ public:
 
     ~SmoothingFilter() = default;
 
-    void reset (T initValue)
-    {
-        y = initValue;
-    }
+    void reset (T initValue) { y = initValue; }
 
     void setLength (T d)
     {
@@ -32,8 +29,6 @@ public:
 
 private:
     T a1, b0, y;
-
-    JUCE_DECLARE_NON_COPYABLE (SmoothingFilter)
 };
 
-} // namespace cgo
+} // namespace cgo::dsp

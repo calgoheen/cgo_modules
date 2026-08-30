@@ -1,11 +1,11 @@
-namespace cgo
+namespace cgo::dsp
 {
 
 class CircularIterator
 {
 public:
     CircularIterator() = default;
-    CircularIterator (int length) : length (length) {}
+    CircularIterator (int len) : length (len) {}
     CircularIterator (const CircularIterator& other) : head (other.get()), length (other.getLength()) {}
 
     CircularIterator& operator= (const CircularIterator& other)
@@ -41,4 +41,4 @@ private:
     int length { 0 };
 };
 
-} // namespace cgo
+} // namespace cgo::dsp
