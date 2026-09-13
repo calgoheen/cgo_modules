@@ -1,3 +1,6 @@
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(IgnoreWarnings)
+
 # Generates the unity include list for a module: one entry per .cpp, each
 # preceded by a path-derived ANON name. EXCLUDE names directories to skip.
 function(cgo_generate_units module)
