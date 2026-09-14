@@ -26,3 +26,5 @@
 #include "components/ImageThumbSlider.h"
 #include "components/ImageToggleButton.h"
 #include "components/ModKnob.h"
+
+#include "utilities/FrameStepper.h"
