@@ -93,6 +93,21 @@ std::optional<ConnectionID> ModulationGraph::findDepthModulation (ModulatorID so
     return findModulation (source, Target { DepthTarget { connection } });
 }
 
+bool ModulationGraph::canAddModulation (ModulatorID source, NodeRef targetNode, int targetParam) const
+{
+    if (! contains (targetNode))
+        return false;
+
+    const Target target { ParamTarget { targetNode, targetParam } };
+
+    if (findModulation (source, target).has_value())
+        return false;
+
+    const auto owner = ownerNodeOf (target);
+
+    return ! (owner.has_value() && std::holds_alternative<ModulatorID> (*owner) && std::get<ModulatorID> (*owner) == source);
+}
+
 bool ModulationGraph::canAddDepthModulation (ConnectionID connection, ModulatorID source) const
 {
     if (connections.find (connection) == connections.end())
@@ -148,6 +163,13 @@ std::optional<ModulationGraph::ModulationEntry> ModulationGraph::getModulation (
         return std::nullopt;
 
     return ModulationEntry { id, it->second.source, it->second.target, it->second.depth->getTargetValue(), it->second.bipolar };
+}
+
+std::shared_ptr<const ModulatedValue> ModulationGraph::getDepthValue (ConnectionID id) const
+{
+    const auto it = connections.find (id);
+
+    return it != connections.end() ? it->second.depth : nullptr;
 }
 
 void ModulationGraph::restoreModulations (const std::vector<ModulationEntry>& entries)

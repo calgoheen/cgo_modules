@@ -9,6 +9,7 @@ public:
         float depth = 0.0f;
         bool bipolar = false;
         bool isPreview = false;
+        bool depthModulated = false;
 
         bool operator== (const Ring& other) const;
     };
@@ -42,6 +43,7 @@ public:
 
     void setModulation (std::optional<Ring> ring, bool hasUnshownModulation);
     void setLiveValue (float normalisedValue);
+    void setLiveDepth (float depth);
     void setAcceptsDrops (bool shouldAccept);
 
     std::function<void (float depth)> onDepthChanged;
@@ -72,6 +74,7 @@ private:
     std::optional<Ring> ring;
     bool unshownModulation = false;
     float liveValue = 0.0f;
+    float liveDepth = 0.0f;
 
     bool handleHover = false;
     bool draggingDepth = false;

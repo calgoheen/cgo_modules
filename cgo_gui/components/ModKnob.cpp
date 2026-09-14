@@ -11,6 +11,9 @@ constexpr float discOutlineThickness = 1.0f;
 constexpr float modGap = 2.0f;
 constexpr int popupLift = 10;
 constexpr float latchedAlpha = 0.85f;
+constexpr float depthTrackAlpha = 0.4f;
+constexpr float depthTickThickness = 1.5f;
+constexpr float depthTickOverhang = 0.5f;
 constexpr float idleAlpha = 0.75f;
 
 constexpr float handleZone = 6.0f;
@@ -28,7 +31,8 @@ CGO_ANON_NAMESPACE_END
 
 bool ModKnob::Ring::operator== (const Ring& other) const
 {
-    return juce::approximatelyEqual (depth, other.depth) && bipolar == other.bipolar && isPreview == other.isPreview;
+    return juce::approximatelyEqual (depth, other.depth) && bipolar == other.bipolar && isPreview == other.isPreview
+           && depthModulated == other.depthModulated;
 }
 
 ModKnob::ModKnob() : juce::Slider (juce::Slider::RotaryVerticalDrag, juce::Slider::NoTextBox) { setWantsKeyboardFocus (false); }
@@ -78,16 +82,55 @@ void ModKnob::paint (juce::Graphics& g)
 
     if (ring.has_value())
     {
-        const float reach = ring->bipolar ? ring->depth * 0.5f : ring->depth;
+        auto spanFor = [&] (float depth)
+        {
+            const float reach = ring->bipolar ? depth * 0.5f : depth;
 
-        const float lo = ring->bipolar ? base - std::abs (reach) : juce::jmin (base, base + reach);
-        const float hi = ring->bipolar ? base + std::abs (reach) : juce::jmax (base, base + reach);
+            return ring->bipolar ? std::pair { base - std::abs (reach), base + std::abs (reach) }
+                                 : std::pair { juce::jmin (base, base + reach), juce::jmax (base, base + reach) };
+        };
 
-        strokeArc (modRadius,
-                   juce::jlimit (0.0f, 1.0f, lo),
-                   juce::jlimit (0.0f, 1.0f, hi),
-                   modulationColour.withAlpha (ring->isPreview ? unfocusedAlpha : latched),
-                   ANON::modThickness);
+        auto strokeSpan = [&] (std::pair<float, float> span, juce::Colour colour)
+        { strokeArc (modRadius, juce::jlimit (0.0f, 1.0f, span.first), juce::jlimit (0.0f, 1.0f, span.second), colour, ANON::modThickness); };
+
+        const auto colour = modulationColour.withAlpha (ring->isPreview ? unfocusedAlpha : latched);
+        const auto set = spanFor (ring->depth);
+
+        if (! ring->depthModulated)
+        {
+            strokeSpan (set, colour);
+        }
+        else
+        {
+            strokeSpan (set, colour.withMultipliedAlpha (ANON::depthTrackAlpha));
+            strokeSpan (spanFor (liveDepth), colour);
+
+            const float sweep = std::abs (rotary.endAngleRadians - rotary.startAngleRadians);
+            const float inset = ANON::depthTickThickness * 0.5f / juce::jmax (1.0f, modRadius * sweep);
+
+            auto notch = [&] (float end)
+            {
+                const auto angle = angleOf (end + (end < base ? inset : -inset));
+                const float half = ANON::modThickness * 0.5f + ANON::depthTickOverhang;
+
+                g.setColour (trough);
+                g.drawLine ({ centre.getPointOnCircumference (modRadius - half, angle), centre.getPointOnCircumference (modRadius + half, angle) },
+                            ANON::depthTickThickness);
+            };
+
+            if (! juce::approximatelyEqual (set.first, set.second))
+            {
+                if (ring->bipolar)
+                {
+                    notch (set.first);
+                    notch (set.second);
+                }
+                else
+                {
+                    notch (ring->depth > 0.0f ? set.second : set.first);
+                }
+            }
+        }
     }
 
     if (ring.has_value() || unshownModulation)
@@ -234,6 +277,19 @@ void ModKnob::setLiveValue (float normalisedValue)
 
     liveValue = clamped;
     repaint();
+}
+
+void ModKnob::setLiveDepth (float depth)
+{
+    const auto clamped = juce::jlimit (-1.0f, 1.0f, depth);
+
+    if (juce::approximatelyEqual (liveDepth, clamped))
+        return;
+
+    liveDepth = clamped;
+
+    if (ring.has_value() && ring->depthModulated)
+        repaint();
 }
 
 void ModKnob::setAcceptsDrops (bool shouldAccept)

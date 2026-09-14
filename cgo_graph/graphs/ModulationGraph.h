@@ -120,6 +120,9 @@ public:
     */
     std::optional<ConnectionID> findDepthModulation (ModulatorID source, ConnectionID connection) const;
 
+    /** Returns true if addModulation would succeed. */
+    bool canAddModulation (ModulatorID source, NodeRef targetNode, int targetParam) const;
+
     /** Returns true if addDepthModulation would succeed. */
     bool canAddDepthModulation (ConnectionID connection, ModulatorID source) const;
 
@@ -139,6 +142,11 @@ public:
 
     /** The connection with this ID, or nullopt if there is none. */
     std::optional<ModulationEntry> getModulation (ConnectionID id) const;
+
+    /** Returns the value object behind a connection's depth, or nullptr if the ConnectionID
+        is not found.
+    */
+    std::shared_ptr<const ModulatedValue> getDepthValue (ConnectionID id) const;
 
     void restoreModulations (const std::vector<ModulationEntry>& entries);
 
