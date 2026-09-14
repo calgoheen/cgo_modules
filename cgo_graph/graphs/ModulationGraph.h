@@ -99,7 +99,7 @@ public:
     /** Creates a new modulation targeting an existing connection's depth. Self-modulation and 
         duplicate connections are not allowed and return nullopt.
     */
-    std::optional<ConnectionID> addDepthModulation (ConnectionID connection, ModulatorID source, float initialDepth = 1.0f, bool bipolar = false);
+    std::optional<ConnectionID> addDepthModulation (ConnectionID connection, ModulatorID source, float initialDepth = 0.0f, bool bipolar = false);
 
     /** Removes an existing connection. */
     void removeModulation (ConnectionID id);
@@ -119,6 +119,9 @@ public:
         nullopt if there is none.
     */
     std::optional<ConnectionID> findDepthModulation (ModulatorID source, ConnectionID connection) const;
+
+    /** Returns true if addDepthModulation would succeed. */
+    bool canAddDepthModulation (ConnectionID connection, ModulatorID source) const;
 
     /** Every connection in the graph, ordered by ConnectionID. */
     std::vector<ModulationEntry> getModulations() const;

@@ -20,6 +20,7 @@
 #include <cgo_core/cgo_core.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 
+#include "components/DepthSlider.h"
 #include "components/FilmStripSlider.h"
 #include "components/ImageRotarySlider.h"
 #include "components/ImageThumbSlider.h"

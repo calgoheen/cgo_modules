@@ -93,6 +93,21 @@ std::optional<ConnectionID> ModulationGraph::findDepthModulation (ModulatorID so
     return findModulation (source, Target { DepthTarget { connection } });
 }
 
+bool ModulationGraph::canAddDepthModulation (ConnectionID connection, ModulatorID source) const
+{
+    if (connections.find (connection) == connections.end())
+        return false;
+
+    const Target target { DepthTarget { connection } };
+
+    if (findModulation (source, target).has_value())
+        return false;
+
+    const auto owner = ownerNodeOf (target);
+
+    return ! (owner.has_value() && std::holds_alternative<ModulatorID> (*owner) && std::get<ModulatorID> (*owner) == source);
+}
+
 std::vector<ModulationGraph::ModulationEntry> ModulationGraph::getModulations() const
 {
     std::vector<ModulationEntry> entries;
