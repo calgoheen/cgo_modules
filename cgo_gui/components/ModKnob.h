@@ -23,7 +23,7 @@ public:
         liveValueColourId
     };
 
-    static constexpr float unfocusedAlpha = 0.6f;
+    static constexpr float unfocusedAlpha = 0.5f;
 
     ModKnob();
     ~ModKnob() override;

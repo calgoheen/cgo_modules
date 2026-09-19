@@ -10,7 +10,6 @@ constexpr float arcThickness = 2.0f;
 constexpr float discOutlineThickness = 1.0f;
 constexpr float modGap = 2.0f;
 constexpr int popupLift = 10;
-constexpr float latchedAlpha = 0.85f;
 constexpr float depthTrackAlpha = 0.4f;
 constexpr float depthTickThickness = 1.5f;
 constexpr float depthTickOverhang = 0.5f;
@@ -74,11 +73,10 @@ void ModKnob::paint (juce::Graphics& g)
     g.drawEllipse (disc, ANON::discOutlineThickness);
 
     const bool valueHot = isMouseOverOrDragging() && ! handleHover && ! draggingDepth;
+    const float focusedAlpha = handleHover ? 1.0f : ANON::idleAlpha;
 
     strokeArc (valueRadius, 0.0f, 1.0f, trough, ANON::arcThickness);
     strokeArc (valueRadius, 0.0f, base, findColour (valueColourId).withMultipliedAlpha (valueHot ? 1.0f : ANON::idleAlpha), ANON::arcThickness);
-
-    const float latched = handleHover ? 1.0f : ANON::latchedAlpha;
 
     if (ring.has_value())
     {
@@ -93,7 +91,7 @@ void ModKnob::paint (juce::Graphics& g)
         auto strokeSpan = [&] (std::pair<float, float> span, juce::Colour colour)
         { strokeArc (modRadius, juce::jlimit (0.0f, 1.0f, span.first), juce::jlimit (0.0f, 1.0f, span.second), colour, ANON::modThickness); };
 
-        const auto colour = modulationColour.withAlpha (ring->isPreview ? unfocusedAlpha : latched);
+        const auto colour = modulationColour.withAlpha (ring->isPreview ? unfocusedAlpha : focusedAlpha);
         const auto set = spanFor (ring->depth);
 
         if (! ring->depthModulated)
@@ -135,7 +133,7 @@ void ModKnob::paint (juce::Graphics& g)
 
     if (ring.has_value() || unshownModulation)
     {
-        g.setColour (modulationColour.withAlpha (ring.has_value() && ! ring->isPreview ? latched : unfocusedAlpha));
+        g.setColour (modulationColour.withAlpha (ring.has_value() && ! ring->isPreview ? focusedAlpha : unfocusedAlpha));
         g.fillRoundedRectangle (getHandleBounds(), ANON::handleHeight * 0.5f);
     }
 
