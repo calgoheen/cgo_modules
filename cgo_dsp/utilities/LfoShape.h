@@ -5,6 +5,7 @@ enum Shape
 {
     triangle = 0,
     sine,
+    square,
     rampUp,
     rampDown,
     numShapes

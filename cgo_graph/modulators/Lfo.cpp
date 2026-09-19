@@ -3,13 +3,20 @@
 namespace cgo
 {
 
+CGO_ANON_NAMESPACE_BEGIN
+
+constexpr float curveScale = 0.5f;
+
+CGO_ANON_NAMESPACE_END
+
 Lfo::Lfo()
   : params { .shape = addModulatedParameter (
-                 ParamUtils::createChoiceParameter ("shape", "Shape", { "Triangle", "Sine", "Ramp Up", "Ramp Down" }, dsp::LfoShape::sine)),
+                 ParamUtils::createChoiceParameter ("shape", "Shape", { "Triangle", "Sine", "Square", "Ramp Up", "Ramp Down" }, dsp::LfoShape::sine)),
              .sync = addModulatedParameter (ParamUtils::createBoolParameter ("sync", "Sync", true)),
              .rateFree = addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f)),
              .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync", "1/4")),
-             .phase = addModulatedParameter (ParamUtils::createPercentParameter ("phase", "Phase", 0.0f)) }
+             .phase = addModulatedParameter (ParamUtils::createPercentParameter ("phase", "Phase", 0.0f)),
+             .curve = addModulatedParameter (ParamUtils::createRangedParameter ("curve", "Curve", "", { -1.0f, 1.0f }, 0.0f)) }
 {
 }
 
@@ -33,13 +40,16 @@ void Lfo::processImpl (float* buffer, int numSamples)
         phasor.setFrequency (params.rateFree.getCurrentValue(), getSampleRate());
 
     const auto* phase = params.phase.getBuffer();
+    const auto* curve = params.curve.getBuffer();
 
     for (int i = 0; i < numSamples; i++)
     {
         if (! syncOn && params.rateFree.isChanging())
             phasor.setFrequency (params.rateFree.getBuffer()[i], getSampleRate());
 
-        buffer[i] = dsp::LfoShape::get (shape, phasor.getFloat (phase[i]), (float) phasor.getFrequency());
+        const float value = dsp::LfoShape::get (shape, phasor.getFloat (phase[i]), (float) phasor.getFrequency());
+        buffer[i] = dsp::Curve::exponential (value, ANON::curveScale * -curve[i]);
+
         phasor.inc();
     }
 }

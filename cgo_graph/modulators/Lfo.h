@@ -11,6 +11,7 @@ public:
         ModulatedParameter& rateFree;
         ModulatedParameter& rateSync;
         ModulatedParameter& phase;
+        ModulatedParameter& curve;
     } params;
 
     Lfo();

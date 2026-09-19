@@ -32,6 +32,23 @@ float ramp (float phase, float freqHz)
     return 1.0f - t * t * (3.0f - 2.0f * t);
 }
 
+float square (float phase, float freqHz)
+{
+    const float edge = juce::jlimit (minFall, maxFall, fallSeconds * freqHz);
+    const float holdEnd = 0.5f - edge;
+
+    const bool high = phase < 0.5f;
+    const float local = high ? phase : phase - 0.5f;
+
+    if (local < holdEnd)
+        return high ? 1.0f : 0.0f;
+
+    const float t = (local - holdEnd) / edge;
+    const float s = t * t * (3.0f - 2.0f * t);
+
+    return high ? 1.0f - s : s;
+}
+
 CGO_ANON_NAMESPACE_END
 
 void init() { juce::ignoreUnused (ANON::sineTable()); }
@@ -50,6 +67,8 @@ float get (Shape shape, float phase, float freqHz)
             return ANON::ramp (phase, freqHz);
         case rampDown:
             return 1.0f - ANON::ramp (phase, freqHz);
+        case square:
+            return ANON::square (phase, freqHz);
         case numShapes:
         default:
             jassertfalse;
