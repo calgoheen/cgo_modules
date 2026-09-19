@@ -30,10 +30,10 @@ constexpr std::array processorTypes { P { "chorus", "Chorus", []() -> std::uniqu
                                       P { "tapestop", "Tape Stop", []() -> std::unique_ptr<Processor> { return std::make_unique<TapeStop>(); } },
                                       P { "utility", "Utility", []() -> std::unique_ptr<Processor> { return std::make_unique<Utility>(); } } };
 
-constexpr std::array modulatorTypes { M { "lfo", "LFO", []() -> std::unique_ptr<Modulator> { return std::make_unique<Lfo>(); } },
-                                      M { "random", "Random", []() -> std::unique_ptr<Modulator> { return std::make_unique<Random>(); } },
+constexpr std::array modulatorTypes { M { "follower", "Follower", []() -> std::unique_ptr<Modulator> { return std::make_unique<EnvelopeFollower>(); } },
+                                      M { "lfo", "LFO", []() -> std::unique_ptr<Modulator> { return std::make_unique<Lfo>(); } },
                                       M { "macro", "Macro", []() -> std::unique_ptr<Modulator> { return std::make_unique<Macro>(); } },
-                                      M { "follower", "Follower", []() -> std::unique_ptr<Modulator> { return std::make_unique<EnvelopeFollower>(); } } };
+                                      M { "random", "Random", []() -> std::unique_ptr<Modulator> { return std::make_unique<Random>(); } } };
 
 template <typename Node, size_t N>
 std::vector<NodeFactory::NodeType> listTypes (const std::array<Entry<Node>, N>& table)
