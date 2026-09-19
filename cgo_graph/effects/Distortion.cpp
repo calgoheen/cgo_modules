@@ -50,4 +50,6 @@ void Distortion::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Distortion::resetImpl() { distortion->reset(); }
+
 } // namespace cgo

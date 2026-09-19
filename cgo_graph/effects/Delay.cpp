@@ -61,6 +61,8 @@ void Delay::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Delay::resetImpl() { delay->reset(); }
+
 void Delay::tempoChanged() { updateDelayTimes(); }
 
 void Delay::updateDelayTimes()

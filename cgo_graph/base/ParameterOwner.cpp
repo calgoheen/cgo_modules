@@ -116,6 +116,12 @@ void ParameterOwner::processParameters (int numSamples, const NodeModulation* mo
         modulatedParameters[i]->process (numSamples, mod.viewFor (i));
 }
 
+void ParameterOwner::markParametersUnsettled()
+{
+    for (auto* mp : modulatedParameters)
+        mp->markUnsettled();
+}
+
 juce::RangedAudioParameter& ParameterOwner::hostParameter (std::unique_ptr<juce::RangedAudioParameter> param)
 {
     // Parameter IDs must be unique within an owner

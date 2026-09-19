@@ -49,6 +49,9 @@ public:
     */
     bool isChanging() const;
 
+    /** Forces the next processed block to report isChanging() as true. */
+    void markUnsettled();
+
     /** True when the value was written from outside during the last processed block: a knob, a
         host edit, or automation playing back.
     */

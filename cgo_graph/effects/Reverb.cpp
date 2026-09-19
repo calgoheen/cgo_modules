@@ -146,4 +146,6 @@ void Reverb::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Reverb::resetImpl() { diffusionReverb->reset(); }
+
 } // namespace cgo

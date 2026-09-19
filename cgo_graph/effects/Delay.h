@@ -25,6 +25,7 @@ public:
 private:
     void prepareImpl() override;
     void processImpl (juce::AudioBuffer<float>& buffer) override;
+    void resetImpl() override;
     void tempoChanged() override;
 
     void updateDelayTimes();

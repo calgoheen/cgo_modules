@@ -67,6 +67,8 @@ void Flanger::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Flanger::resetImpl() { flanger->reset(); }
+
 void Flanger::playbackStateChanged()
 {
     if (getPlaybackState())

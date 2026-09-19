@@ -117,6 +117,8 @@ float ModulatedValue::writeBlockRate (int numSamples, ModulationView view)
 
 bool ModulatedValue::isChanging() const { return dirty; }
 
+void ModulatedValue::markUnsettled() { unsettled = true; }
+
 bool ModulatedValue::wasTouched() const { return touched; }
 
 const float* ModulatedValue::getBuffer() const { return buffer.read(); }

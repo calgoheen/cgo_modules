@@ -55,6 +55,8 @@ void Gate::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Gate::resetImpl() { gate->reset(); }
+
 void Gate::updateBallistics()
 {
     gate->setAttack (params.attack.getCurrentValue() * 1e3f);

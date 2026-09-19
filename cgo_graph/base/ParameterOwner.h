@@ -39,6 +39,7 @@ protected:
 
     void prepareParameters (double sampleRate, int blockSize);
     void processParameters (int numSamples, const NodeModulation* modulation = nullptr);
+    void markParametersUnsettled();
 
 private:
     juce::RangedAudioParameter& hostParameter (std::unique_ptr<juce::RangedAudioParameter> param);

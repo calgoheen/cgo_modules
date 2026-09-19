@@ -88,6 +88,8 @@ void Phaser::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Phaser::resetImpl() { phaser->reset(); }
+
 void Phaser::playbackStateChanged()
 {
     if (getPlaybackState())

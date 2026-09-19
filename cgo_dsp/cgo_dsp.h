@@ -36,6 +36,7 @@ JUCE_END_IGNORE_WARNINGS_GCC_LIKE
 #include "utilities/BufferUtils.h"
 #include "utilities/LfoShape.h"
 #include "utilities/AudioUtils.h"
+#include "utilities/DryWetFader.h"
 
 #include "effects/Chorus.h"
 #include "effects/Compressor.h"

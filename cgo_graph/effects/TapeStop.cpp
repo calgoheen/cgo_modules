@@ -27,6 +27,27 @@ void TapeStop::prepareImpl()
 {
     tapeStop.emplace ((float) getSampleRate(), getNumChannels());
 
+    configure();
+}
+
+void TapeStop::processImpl (juce::AudioBuffer<float>& audioBuffer)
+{
+    updateParameters();
+
+    tapeStop->process (audioBuffer.getArrayOfWritePointers(), 0, audioBuffer.getNumSamples());
+}
+
+void TapeStop::resetImpl()
+{
+    tapeStop->reset();
+
+    configure();
+}
+
+void TapeStop::tempoChanged() { updateLength(); }
+
+void TapeStop::configure()
+{
     tapeStop->setSlowdownRange (ANON::rampStart, ANON::rampEnd);
     tapeStop->setSpeedupRange (ANON::rampStart, ANON::rampEnd);
     tapeStop->setFadeLength (ANON::fadeLengthSeconds);
@@ -37,15 +58,6 @@ void TapeStop::prepareImpl()
     updateParameters();
     tapeStop->setMode (lastObservedMode, true);
 }
-
-void TapeStop::processImpl (juce::AudioBuffer<float>& audioBuffer)
-{
-    updateParameters();
-
-    tapeStop->process (audioBuffer.getArrayOfWritePointers(), 0, audioBuffer.getNumSamples());
-}
-
-void TapeStop::tempoChanged() { updateLength(); }
 
 void TapeStop::updateParameters()
 {

@@ -30,6 +30,7 @@ public:
 private:
     void prepareImpl() override;
     void processImpl (juce::AudioBuffer<float>& buffer) override;
+    void resetImpl() override;
     void playbackStateChanged() override;
     void tempoChanged() override;
     void playHeadJumped() override;

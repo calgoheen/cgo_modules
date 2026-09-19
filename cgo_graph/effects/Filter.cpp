@@ -38,6 +38,8 @@ void Filter::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Filter::resetImpl() { filter->reset(); }
+
 void Filter::updateParameters()
 {
     filter->setType (ParamUtils::choiceFromValue<dsp::Filter::Type> (params.type.getCurrentValue()));

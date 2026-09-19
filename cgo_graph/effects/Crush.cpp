@@ -51,4 +51,6 @@ void Crush::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Crush::resetImpl() { crush->reset(); }
+
 } // namespace cgo

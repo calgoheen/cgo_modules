@@ -69,6 +69,8 @@ void Compressor::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Compressor::resetImpl() { compressor->reset(); }
+
 void Compressor::updateBallistics()
 {
     compressor->setAttack (params.attack.getCurrentValue() * 1e3f);

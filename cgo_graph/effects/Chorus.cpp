@@ -67,6 +67,8 @@ void Chorus::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Chorus::resetImpl() { chorus->reset(); }
+
 void Chorus::playbackStateChanged()
 {
     if (getPlaybackState())

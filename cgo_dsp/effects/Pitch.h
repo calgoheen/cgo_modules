@@ -9,17 +9,14 @@ public:
         jassert (numChannels == 1 || numChannels == 2);
 
         shifter.prepare ({ 0.0, 0, (juce::uint32) numChannels });
+        shifter.setShiftFactor (1.0f);
 
         reset();
     }
 
     ~Pitch() = default;
 
-    void reset()
-    {
-        shifter.reset();
-        shifter.setShiftFactor (1.0f);
-    }
+    void reset() { shifter.reset(); }
 
     void process (float* const* buffer, int startSample, int numSamples)
     {

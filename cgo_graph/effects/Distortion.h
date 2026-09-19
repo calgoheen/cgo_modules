@@ -20,6 +20,7 @@ public:
 private:
     void prepareImpl() override;
     void processImpl (juce::AudioBuffer<float>& buffer) override;
+    void resetImpl() override;
 
     std::optional<dsp::Distortion> distortion;
 

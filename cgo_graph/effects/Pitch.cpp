@@ -44,4 +44,6 @@ void Pitch::processImpl (juce::AudioBuffer<float>& buffer)
     }
 }
 
+void Pitch::resetImpl() { shifter->reset(); }
+
 } // namespace cgo
