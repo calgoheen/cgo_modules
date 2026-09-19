@@ -6,7 +6,7 @@ namespace cgo
 Random::Random()
   : params { .sync = addModulatedParameter (ParamUtils::createBoolParameter ("sync", "Sync", true)),
              .rateFree = addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f)),
-             .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync")),
+             .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync", "1/4")),
              .smooth = addModulatedParameter (ParamUtils::createPercentParameter ("smooth", "Smooth", 0.0f)),
              .steps = addModulatedParameter (
                  ParamUtils::createRangedParameter ("steps",

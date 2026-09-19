@@ -8,7 +8,7 @@ Lfo::Lfo()
                  ParamUtils::createChoiceParameter ("shape", "Shape", { "Triangle", "Sine", "Ramp Up", "Ramp Down" }, dsp::LfoShape::sine)),
              .sync = addModulatedParameter (ParamUtils::createBoolParameter ("sync", "Sync", true)),
              .rateFree = addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f)),
-             .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync")) }
+             .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync", "1/4")) }
 {
 }
 
