@@ -20,6 +20,17 @@ static juce::PropertiesFile::Options getPropertiesFileOptions()
     return options;
 }
 
+juce::Component* ResizableEditor::getContentComponent (const juce::Component* descendant)
+{
+    if (descendant == nullptr)
+        return nullptr;
+
+    if (auto* editor = descendant->findParentComponentOfClass<ResizableEditor>())
+        return editor->component.get();
+
+    return nullptr;
+}
+
 ResizableEditor::ResizableEditor (juce::AudioProcessor& proc, std::unique_ptr<juce::Component> comp, float defaultScale, float minScale, float maxScale)
   : AudioProcessorEditor (proc),
     component (std::move (comp)),

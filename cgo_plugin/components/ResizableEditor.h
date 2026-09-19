@@ -4,6 +4,8 @@ namespace cgo
 class ResizableEditor : public juce::AudioProcessorEditor
 {
 public:
+    static juce::Component* getContentComponent (const juce::Component* descendant);
+
     ResizableEditor (juce::AudioProcessor& processor,
                      std::unique_ptr<juce::Component> component,
                      float defaultScaleFactor = 1.0f,
