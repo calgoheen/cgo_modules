@@ -10,6 +10,7 @@ public:
         ModulatedParameter& sync;
         ModulatedParameter& rateFree;
         ModulatedParameter& rateSync;
+        ModulatedParameter& phase;
     } params;
 
     Lfo();

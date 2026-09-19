@@ -8,7 +8,8 @@ Lfo::Lfo()
                  ParamUtils::createChoiceParameter ("shape", "Shape", { "Triangle", "Sine", "Ramp Up", "Ramp Down" }, dsp::LfoShape::sine)),
              .sync = addModulatedParameter (ParamUtils::createBoolParameter ("sync", "Sync", true)),
              .rateFree = addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f)),
-             .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync", "1/4")) }
+             .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync", "1/4")),
+             .phase = addModulatedParameter (ParamUtils::createPercentParameter ("phase", "Phase", 0.0f)) }
 {
 }
 
@@ -31,12 +32,15 @@ void Lfo::processImpl (float* buffer, int numSamples)
     else if (! syncOn && params.sync.isChanging())
         phasor.setFrequency (params.rateFree.getCurrentValue(), getSampleRate());
 
+    const auto* phase = params.phase.getBuffer();
+
     for (int i = 0; i < numSamples; i++)
     {
         if (! syncOn && params.rateFree.isChanging())
             phasor.setFrequency (params.rateFree.getBuffer()[i], getSampleRate());
 
-        buffer[i] = dsp::LfoShape::get (shape, phasor.getFloatAndInc(), (float) phasor.getFrequency());
+        buffer[i] = dsp::LfoShape::get (shape, phasor.getFloat (phase[i]), (float) phasor.getFrequency());
+        phasor.inc();
     }
 }
 
