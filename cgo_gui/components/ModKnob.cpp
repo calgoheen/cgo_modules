@@ -34,7 +34,11 @@ bool ModKnob::Ring::operator== (const Ring& other) const
            && depthModulated == other.depthModulated;
 }
 
-ModKnob::ModKnob() : juce::Slider (juce::Slider::RotaryVerticalDrag, juce::Slider::NoTextBox) { setWantsKeyboardFocus (false); }
+ModKnob::ModKnob() : juce::Slider (juce::Slider::RotaryVerticalDrag, juce::Slider::NoTextBox)
+{
+    setWantsKeyboardFocus (false);
+    setScrollWheelEnabled (false);
+}
 
 ModKnob::~ModKnob()
 {
