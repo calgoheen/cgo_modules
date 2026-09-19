@@ -46,6 +46,7 @@ JUCE_END_IGNORE_WARNINGS_GCC_LIKE
 #include "effects/Flanger.h"
 #include "effects/Gate.h"
 #include "effects/Phaser.h"
+#include "effects/Pitch.h"
 #include "effects/DiffusionReverb.h"
 #include "effects/TapeStop.h"
 #include "effects/Utility.h"

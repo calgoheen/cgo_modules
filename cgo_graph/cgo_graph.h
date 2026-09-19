@@ -56,6 +56,7 @@
 #include "effects/Compressor.h"
 #include "effects/Gate.h"
 #include "effects/Distortion.h"
+#include "effects/Pitch.h"
 #include "effects/Utility.h"
 
 #include "session/NodeFactory.h"

@@ -25,6 +25,7 @@ constexpr std::array processorTypes { P { "chorus", "Chorus", []() -> std::uniqu
                                       P { "flanger", "Flanger", []() -> std::unique_ptr<Processor> { return std::make_unique<Flanger>(); } },
                                       P { "gate", "Gate", []() -> std::unique_ptr<Processor> { return std::make_unique<Gate>(); } },
                                       P { "phaser", "Phaser", []() -> std::unique_ptr<Processor> { return std::make_unique<Phaser>(); } },
+                                      P { "pitch", "Pitch", []() -> std::unique_ptr<Processor> { return std::make_unique<Pitch>(); } },
                                       P { "reverb", "Reverb", []() -> std::unique_ptr<Processor> { return std::make_unique<Reverb>(); } },
                                       P { "tapestop", "Tape Stop", []() -> std::unique_ptr<Processor> { return std::make_unique<TapeStop>(); } },
                                       P { "utility", "Utility", []() -> std::unique_ptr<Processor> { return std::make_unique<Utility>(); } } };
