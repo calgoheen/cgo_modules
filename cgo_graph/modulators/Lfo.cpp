@@ -13,9 +13,10 @@ Lfo::Lfo()
   : params { .shape = addModulatedParameter (
                  ParamUtils::createChoiceParameter ("shape", "Shape", { "Triangle", "Sine", "Square", "Ramp Up", "Ramp Down" }, dsp::LfoShape::sine)),
              .sync = addModulatedParameter (ParamUtils::createBoolParameter ("sync", "Sync", true)),
-             .rateFree = addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f)),
+             .rateFree =
+                 addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f), {}, ModulatedValue::Rate::audio),
              .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync", "1/4")),
-             .phase = addModulatedParameter (ParamUtils::createPercentParameter ("phase", "Phase", 0.0f)),
+             .phase = addModulatedParameter (ParamUtils::createPercentParameter ("phase", "Phase", 0.0f), {}, ModulatedValue::Rate::audio),
              .curve = addModulatedParameter (ParamUtils::createRangedParameter ("curve", "Curve", "", { -1.0f, 1.0f }, 0.0f)) }
 {
 }

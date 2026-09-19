@@ -6,9 +6,11 @@ namespace cgo
 Filter::Filter()
   : Processor (BusesProperties().withInput ("Input", juce::AudioChannelSet::stereo(), true).withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
     params { .order = addModulatedParameter (ParamUtils::createChoiceParameter ("order", "Order", { "12 dB", "24 dB" }, 0)),
-             .cutoff = addModulatedParameter (ParamUtils::createFreqParameter ("cutoff", "Cutoff", 20.0f, 20e3f, 1e3f, 1e3f)),
+             .cutoff = addModulatedParameter (ParamUtils::createFreqParameter ("cutoff", "Cutoff", 20.0f, 20e3f, 1e3f, 1e3f), {}, ModulatedValue::Rate::audio),
              .resonance =
-                 addModulatedParameter (ParamUtils::createRangedParameter ("res", "Resonance", "", ParamUtils::getRangeWithCenter (0.1f, 10.0f, 1.0f), 0.71f)),
+                 addModulatedParameter (ParamUtils::createRangedParameter ("res", "Resonance", "", ParamUtils::getRangeWithCenter (0.1f, 10.0f, 1.0f), 0.71f),
+                                        {},
+                                        ModulatedValue::Rate::audio),
              .type = addModulatedParameter (ParamUtils::createChoiceParameter ("type", "Type", { "Lowpass", "Bandpass", "Highpass", "Notch" }, 0)) }
 {
 }

@@ -5,18 +5,19 @@ namespace cgo
 
 Random::Random()
   : params { .sync = addModulatedParameter (ParamUtils::createBoolParameter ("sync", "Sync", true)),
-             .rateFree = addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f)),
+             .rateFree =
+                 addModulatedParameter (ParamUtils::createFreqParameter ("rate_free", "Rate Free", 0.1f, 100.0f, 10.0f, 1.0f), {}, ModulatedValue::Rate::audio),
              .rateSync = addModulatedParameter (ParamUtils::createSyncedRateParameter ("rate_sync", "Rate Sync", "1/4")),
              .smooth = addModulatedParameter (ParamUtils::createPercentParameter ("smooth", "Smooth", 0.0f)),
-             .steps = addModulatedParameter (
-                 ParamUtils::createRangedParameter ("steps",
-                                                    "Steps",
-                                                    "",
-                                                    { 1.0f, 32.0f, 1.0f },
-                                                    1.0f,
-                                                    [] (float x, int) { return x < 2.0f ? juce::String ("Off") : juce::String (juce::roundToInt (x)); },
-                                                    [] (const juce::String& str) { return str.getFloatValue(); }),
-                 noSmoothing) }
+             .steps = addModulatedParameter (ParamUtils::createRangedParameter (
+                                                 "steps",
+                                                 "Steps",
+                                                 "",
+                                                 { 1.0f, 32.0f, 1.0f },
+                                                 1.0f,
+                                                 [] (float x, int) { return x < 2.0f ? juce::String ("Off") : juce::String (juce::roundToInt (x)); },
+                                                 [] (const juce::String& str) { return str.getFloatValue(); }),
+                                             noSmoothing) }
 {
 }
 

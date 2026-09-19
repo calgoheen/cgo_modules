@@ -35,15 +35,19 @@ Utility::Utility()
     params { .gain = addModulatedParameter (ParamUtils::createGainParameter ("gain", "Gain", -60.0f, 12.0f, 0.0f), {}, ModulatedValue::Rate::audio),
              .level = addModulatedParameter (ParamUtils::createPercentParameter ("level", "Level", 1.0f), {}, ModulatedValue::Rate::audio),
              .pan =
-                 addModulatedParameter (ParamUtils::createRangedParameter ("pan", "Pan", "", { -1.0f, 1.0f }, 0.0f, ANON::stringFromPan, ANON::panFromString)),
+                 addModulatedParameter (ParamUtils::createRangedParameter ("pan", "Pan", "", { -1.0f, 1.0f }, 0.0f, ANON::stringFromPan, ANON::panFromString),
+                                        {},
+                                        ModulatedValue::Rate::audio),
              .width = addModulatedParameter (ParamUtils::createRangedParameter (
-                 "width",
-                 "Width",
-                 "%",
-                 { 0.0f, 2.0f },
-                 1.0f,
-                 [] (float val, int) { return juce::String (juce::roundToInt (val * 100.0f)); },
-                 [] (const juce::String& str) { return str.getFloatValue() / 100.0f; })),
+                                                 "width",
+                                                 "Width",
+                                                 "%",
+                                                 { 0.0f, 2.0f },
+                                                 1.0f,
+                                                 [] (float val, int) { return juce::String (juce::roundToInt (val * 100.0f)); },
+                                                 [] (const juce::String& str) { return str.getFloatValue() / 100.0f; }),
+                                             {},
+                                             ModulatedValue::Rate::audio),
              .mono = addModulatedParameter (ParamUtils::createBoolParameter ("mono", "Mono", false)),
              .invert = addModulatedParameter (ParamUtils::createBoolParameter ("invert", "Invert", false)) }
 {

@@ -27,8 +27,6 @@ void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
 
     const bool dry = fader.isDry();
 
-    // Nothing pushed the parameters to the DSP while processImpl was skipped, so resuming has
-    // to replay everything that changed in the meantime
     if (wasDry && ! dry)
         markParametersUnsettled();
 
