@@ -11,8 +11,7 @@ function(cgo_ignore_warnings)
         get_target_property(includes ${target} INTERFACE_INCLUDE_DIRECTORIES)
 
         if(includes)
-            set_target_properties(${target} PROPERTIES
-                INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${includes}")
+            set_target_properties(${target} PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${includes}")
         endif()
     endforeach()
 endfunction()

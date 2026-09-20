@@ -12,11 +12,7 @@ function(_cgo_is_writable path out)
 
     set(probe "${path}/.cgo-write-probe")
 
-    execute_process(
-        COMMAND "${CMAKE_COMMAND}" -E touch "${probe}"
-        RESULT_VARIABLE failed
-        OUTPUT_QUIET
-        ERROR_QUIET)
+    execute_process(COMMAND "${CMAKE_COMMAND}" -E touch "${probe}" RESULT_VARIABLE failed OUTPUT_QUIET ERROR_QUIET)
 
     if(failed)
         set(${out} FALSE PARENT_SCOPE)
@@ -44,18 +40,35 @@ function(cgo_install_plugin_after_build target)
 
     if(APPLE)
         set(dirs
-            AU   "/Library/Audio/Plug-Ins/Components" component
-            VST3 "/Library/Audio/Plug-Ins/VST3"       vst3
-            CLAP "/Library/Audio/Plug-Ins/CLAP"       clap)
+            AU
+            "/Library/Audio/Plug-Ins/Components"
+            component
+            VST3
+            "/Library/Audio/Plug-Ins/VST3"
+            vst3
+            CLAP
+            "/Library/Audio/Plug-Ins/CLAP"
+            clap
+        )
         set(own "/Library/Audio/Plug-Ins")
     elseif(WIN32)
         set(dirs
-            VST3 "$ENV{CommonProgramW6432}/VST3" vst3
-            CLAP "$ENV{CommonProgramW6432}/CLAP" clap)
+            VST3
+            "$ENV{CommonProgramW6432}/VST3"
+            vst3
+            CLAP
+            "$ENV{CommonProgramW6432}/CLAP"
+            clap
+        )
     else()
         set(dirs
-            VST3 "$ENV{HOME}/.vst3" vst3
-            CLAP "$ENV{HOME}/.clap" clap)
+            VST3
+            "$ENV{HOME}/.vst3"
+            vst3
+            CLAP
+            "$ENV{HOME}/.clap"
+            clap
+        )
         set(own "$ENV{HOME}/.vst3 $ENV{HOME}/.clap")
     endif()
 
@@ -87,19 +100,24 @@ function(cgo_install_plugin_after_build target)
         get_target_property(artefact ${plugin} JUCE_PLUGIN_ARTEFACT_FILE)
 
         if(APPLE)
-            add_custom_command(TARGET ${plugin} POST_BUILD
-                COMMAND "${CMAKE_COMMAND}"
-                    "-Dsrc=$<GENEX_EVAL:${artefact}>"
-                    "-P" "${JUCE_CMAKE_UTILS_DIR}/checkBundleSigning.cmake"
-                VERBATIM)
+            add_custom_command(
+                TARGET ${plugin}
+                POST_BUILD
+                COMMAND
+                    "${CMAKE_COMMAND}" "-Dsrc=$<GENEX_EVAL:${artefact}>" "-P"
+                    "${JUCE_CMAKE_UTILS_DIR}/checkBundleSigning.cmake"
+                VERBATIM
+            )
         endif()
 
-        add_custom_command(TARGET ${plugin} POST_BUILD
-            COMMAND "${CMAKE_COMMAND}"
-                "-Dsrc=$<GENEX_EVAL:${artefact}>"
-                "-Ddest=${destination}"
-                "-P" "${JUCE_CMAKE_UTILS_DIR}/copyDir.cmake"
-            VERBATIM)
+        add_custom_command(
+            TARGET ${plugin}
+            POST_BUILD
+            COMMAND
+                "${CMAKE_COMMAND}" "-Dsrc=$<GENEX_EVAL:${artefact}>" "-Ddest=${destination}" "-P"
+                "${JUCE_CMAKE_UTILS_DIR}/copyDir.cmake"
+            VERBATIM
+        )
     endwhile()
 
     if(blocked)
@@ -108,16 +126,19 @@ function(cgo_install_plugin_after_build target)
         if(own)
             set(remedy
                 "Take ownership of the plug-in folders and configure again:\n"
-                "    sudo chown -R \"$USER\" ${own}")
+                "    sudo chown -R \"$USER\" ${own}"
+            )
             string(JOIN "" remedy ${remedy})
         else()
             set(remedy "Configure and build from a shell running as Administrator.")
         endif()
 
-        message(FATAL_ERROR
+        message(
+            FATAL_ERROR
             "CGO_INSTALL_AFTER_BUILD is on, but these install locations are "
             "not writable:\n"
             "    ${listing}\n"
-            "${remedy}\n")
+            "${remedy}\n"
+        )
     endif()
 endfunction()

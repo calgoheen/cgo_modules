@@ -25,10 +25,7 @@ function(cgo_generate_units module)
     foreach(unit IN LISTS units)
         file(RELATIVE_PATH rel "${module_path}" "${unit}")
         string(REGEX REPLACE "[^A-Za-z0-9]" "_" name "${rel}")
-        string(APPEND content
-            "#undef ANON\n"
-            "#define ANON cgoAnon_${name}\n"
-            "#include <${module}/${rel}>\n\n")
+        string(APPEND content "#undef ANON\n" "#define ANON cgoAnon_${name}\n" "#include <${module}/${rel}>\n\n")
     endforeach()
 
     string(APPEND content "#undef ANON\n")
